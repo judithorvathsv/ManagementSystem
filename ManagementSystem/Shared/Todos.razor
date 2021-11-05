@@ -1,0 +1,56 @@
+﻿
+<div class="container">  
+
+    @foreach (var item in MachineList.Machines)
+    {
+        <hr />
+        <div class="form-group row">
+            <label class="col-sm-4 col-form-label" type="text" style="font-weight:bold"> @item.Name </label>
+            <label class="col-sm-1 col-form-label" type="text" style="font-weight:bold">Status:</label>
+            <div class="col-sm-2">
+                @if (item.Status == true)
+                {<label type="text" readonly class="form-control-plaintext">Online</label> }
+                else
+                { <label type="text" readonly class="form-control-plaintext">Offline</label>}
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-sm-4 col-form-label" type="text">@item.Id</label>
+            <label class="col-sm-1 col-form-label" type="text" style="font-weight:bold">Data:</label>
+            <div class="col-sm-4">
+                <label type="text" readonly class="form-control-plaintext">@item.SentData</label>
+            </div>
+
+            <div @onclick="() => ItemStatus(item)" class="col-sm-1 @(item.Status ? "change" : "")">
+
+                @{var result = item.Status == true ? "STOP" : "START";} @result
+            </div>
+
+            <div class="col-sm-1">
+                <button style="margin-left:5px;" @onclick="() => Remove(item)" class="btn btn-danger"><i class="fa fa-remove"></i></button>
+            </div>
+        </div>
+    }
+
+</div>
+
+@code { 
+
+    [Parameter]
+    public MachineList MachineList { get; set; }
+
+    //Switch on/off the maschine
+    private async Task ItemStatus(Models.Machine item)      {
+        item.Status = item.Status ? false : true;
+        var response = await httpClient.PutAsJsonAsync<Machine>($"api/machine/{item.Id}", item);
+    }
+
+    //private void Remove(Models.Machine item)      { MachineList.Machines.Remove(item);             }
+
+    private async Task Remove(Models.Machine item) {
+        var result = await httpClient.DeleteAsync($"api/machine/{item.Id}");
+
+        if(result.IsSuccessStatusCode)
+        MachineList.Machines.Remove(item); }
+    }
