@@ -1,5 +1,4 @@
 ﻿
-
 <div class="form-group row">
     <input type="text" class="form-control col-sm-4" @bind="@Name" placeholder="Add name..." autofocus>
     <label class="col-sm-1 col-form-label" type="text" style="font-weight:bold">Status:</label>
@@ -18,7 +17,7 @@
     </div>
 </div>
 
-<button @onclick="OnAdd" @onclick:preventDefault="true" id="addItemBtn" class="btn btn-info">ADD</button>
+@*<button @onclick="OnAdd" @onclick:preventDefault="true" id="addItemBtn" class="btn btn-info">ADD</button>*@
 
 
 
@@ -32,17 +31,25 @@
 
     public string SentData { get; set; }
 
+    public TempDTO tempDTO;
+
 
     [Parameter]
-    public EventCallback<string> Add { get; set; }
+    public EventCallback<TempDTO> Add { get; set; }
 
     public async Task OnAdd()
     {
         if (Add.HasDelegate)
         {
-            await Add.InvokeAsync(Name);
+           tempDTO.Name = Name;
+           tempDTO.Status = Status; 
+           tempDTO.SentData = SentData;
+
+            await Add.InvokeAsync(tempDTO);
         }
         Name = default;
+        Status=default;
+        SentData=default;
     }
 
 

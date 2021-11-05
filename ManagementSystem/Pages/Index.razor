@@ -2,41 +2,41 @@
 
 <h1 style="text-align:center">Machine list</h1>
 
-@*<MachineItem Add = "AddItem"/>*@
-@*<button @onclick="AddItem" @onclick:preventDefault="true" id="addItemBtn" class="btn btn-info">ADD</button>*@
+<MachineItem Add="AddItem" />
+<button @onclick="AddItem" @onclick:preventDefault="true" id="addItemBtn" class="btn btn-info">ADD</button>
 
 <Todos MachineList="@items" />
 
 
 @code{
 
-            public MachineList items = new MachineList();
+    public MachineList items = new MachineList();
 
-
-
-            protected override async Task OnInitializedAsync()
-            {
-                items = await httpClient.GetFromJsonAsync<MachineList>("api/machine");
-                items.Machines.Add(new Models.Machine { Id = "1", Name = "Fist", Status = true, SentData = "this have sent" });
-                items.Machines.Add(new Models.Machine { Id = "2", Name = "Second", Status = false, SentData = "that have sent" });
-            }
-
-    private async Task AddItem(string name, bool status, string sentData)
+    protected override async Task OnInitializedAsync()
     {
-        var response = await httpClient.PostAsJsonAsync<CreateMachineDTO>("api/machine", new CreateMachineDTO { Name = name, Status = status, SentData = sentData });
-
-        if (!string.IsNullOrWhiteSpace(name) && response.IsSuccessStatusCode)
-        {
-
-            items.Machines.Add(new Machine{
-                Name = name, Status = status, SentData = sentData
-            });
-
-
-        }
+        items = await httpClient.GetFromJsonAsync<MachineList>("api/machine");
+        //items.Machines.Add(new Models.Machine { Id = "1", Name = "Fist", Status = true, SentData = "this have sent" });
+        //items.Machines.Add(new Models.Machine { Id = "2", Name = "Second", Status = false, SentData = "that have sent" });
     }
 
+    private async Task AddItem(TempDTO tempDTO)
+    {
+        var response = await httpClient.PostAsJsonAsync<CreateMachineDTO>("api/machine", new CreateMachineDTO
+        {
+            Name = tempDTO.name,
+            Status = tempDTO.status,
+            SentData = tempDTO.sentData
+        });
+
+        if (!string.IsNullOrWhiteSpace(tempDTO.Name) && response.IsSuccessStatusCode)
+        {
+
+            items.Machines.Add(new Machine
+            {
+                Name = tempDTO.Name,
+                Status = tempDTO.Status,
+                SentData = tempDTO.SentData
+            });
+        }
+    }
 }
-
-
-
