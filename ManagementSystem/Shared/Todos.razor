@@ -1,5 +1,5 @@
 ﻿
-<div class="container">  
+<div class="container">
 
     @foreach (var item in MachineList.Machines)
     {
@@ -23,34 +23,41 @@
             </div>
 
             <div @onclick="() => ItemStatus(item)" class="col-sm-1 @(item.Status ? "change" : "")">
-
                 @{var result = item.Status == true ? "STOP" : "START";} @result
             </div>
 
             <div class="col-sm-1">
                 <button style="margin-left:5px;" @onclick="() => Remove(item)" class="btn btn-danger"><i class="fa fa-remove"></i></button>
             </div>
+
+      
         </div>
-    }
+                    }
 
 </div>
 
-@code { 
+@code {
 
     [Parameter]
     public MachineList MachineList { get; set; }
 
     //Switch on/off the maschine
-    private async Task ItemStatus(Models.Machine item)      {
+    private async Task ItemStatus(Models.Machine item)
+    {
         item.Status = item.Status ? false : true;
         var response = await httpClient.PutAsJsonAsync<Machine>($"api/machine/{item.Id}", item);
     }
 
     //private void Remove(Models.Machine item)      { MachineList.Machines.Remove(item);             }
 
-    private async Task Remove(Models.Machine item) {
+    private async Task Remove(Models.Machine item)
+    {
         var result = await httpClient.DeleteAsync($"api/machine/{item.Id}");
 
-        if(result.IsSuccessStatusCode)
-        MachineList.Machines.Remove(item); }
+        if (result.IsSuccessStatusCode)
+            MachineList.Machines.Remove(item);
     }
+
+
+}
+}

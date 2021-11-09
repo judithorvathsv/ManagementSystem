@@ -1,29 +1,15 @@
 ﻿
-<div class="form-group row">
-    <input type="text" class="form-control col-sm-4" @bind="@Name" placeholder="Add name..." autofocus>
-    <label class="col-sm-1 col-form-label" type="text" style="font-weight:bold">Status:</label>
-    <div class="col-sm-2">
-        @(Status == false)
-        { <label type="text" readonly class="form-control-plaintext">Offline</label>}
+<form class="py-4 container">
+    <div class="input-group input-group-lg">
+        <input type="text" @bind="@Name" class="form-control" placeholder="Add name..." autofocus>
+        <input type="text" @bind="@Status" class="form-control" placeholder="Add status..." autofocus>
+        <input type="text" @bind="@SentData" class="form-control" placeholder="Add data..." autofocus>
+        <button @onclick="OnAdd" @onclick:preventDefault="true" id="addItemBtn" class="btn btn-info">ADD</button>
     </div>
-</div>
-
-
-<div class="form-group row">
-    <label class="col-sm-4 col-form-label" type="text">@Id</label>
-    <label class="col-sm-1 col-form-label" type="text" style="font-weight:bold">Data:</label>
-    <div class="col-sm-6">
-        <input type="text" class="form-control-plaintext" @bind="@SentData" placeholder="Add data..." autofocus>
-    </div>
-</div>
-
-@*<button @onclick="OnAdd" @onclick:preventDefault="true" id="addItemBtn" class="btn btn-info">ADD</button>*@
-
-
+</form>
 
 @code {
-
-    public string Id { get; set; }
+    //public string Id { get; set; }
 
     public string Name { get; set; }
 
@@ -31,46 +17,24 @@
 
     public string SentData { get; set; }
 
-    public TempDTO tempDTO;
-
-
     [Parameter]
     public EventCallback<TempDTO> Add { get; set; }
+    //public EventCallback<CreateMachineDTO> Add { get; set; }
+
 
     public async Task OnAdd()
     {
         if (Add.HasDelegate)
         {
-           tempDTO.Name = Name;
-           tempDTO.Status = Status; 
-           tempDTO.SentData = SentData;
+            var tempDTO = new TempDTO();
+            tempDTO.Name = Name;
+            tempDTO.Status = Status;
+            tempDTO.SentData = SentData;
 
             await Add.InvokeAsync(tempDTO);
         }
         Name = default;
-        Status=default;
-        SentData=default;
+        Status = default;
+        SentData = default;
     }
-
-
-
-
-
-
-}
-
-
-
-
-    @*@public class EventCallback()
-        {
-
-    public string ThisName { get; set; }
-    public bool ThisStatus { get; set; }
-    public string ThisSentData { get; set; }
-
-    public async Task OnAdd()
-    {
-    await MachineItem.InvokeAsync(ThisName, ThisStatus, ThisSentData);
-    }*@
 }

@@ -3,10 +3,7 @@
 <h1 style="text-align:center">Machine list</h1>
 
 <MachineItem Add="AddItem" />
-<button @onclick="AddItem" @onclick:preventDefault="true" id="addItemBtn" class="btn btn-info">ADD</button>
-
 <Todos MachineList="@items" />
-
 
 @code{
 
@@ -20,17 +17,17 @@
     }
 
     private async Task AddItem(TempDTO tempDTO)
+    //private async Task AddItem(CreateMachineDTO tempDTO)
     {
         var response = await httpClient.PostAsJsonAsync<CreateMachineDTO>("api/machine", new CreateMachineDTO
         {
-            Name = tempDTO.name,
-            Status = tempDTO.status,
-            SentData = tempDTO.sentData
+            Name = tempDTO.Name,
+            Status = tempDTO.Status,
+            SentData = tempDTO.SentData
         });
 
         if (!string.IsNullOrWhiteSpace(tempDTO.Name) && response.IsSuccessStatusCode)
         {
-
             items.Machines.Add(new Machine
             {
                 Name = tempDTO.Name,
@@ -39,4 +36,4 @@
             });
         }
     }
-}
+    }
