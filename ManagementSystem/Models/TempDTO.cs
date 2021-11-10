@@ -12,5 +12,7 @@ namespace ManagementSystem.Models
         public bool Status { get; set; }
 
         public string SentData { get; set; }
+
+        //public int Test { get; set; }
     }
 }
