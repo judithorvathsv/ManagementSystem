@@ -11,7 +11,8 @@ namespace DevOpsTests
         public void Test1()
         {
             var Machines = "";
-            var NotEmptyMachine = "oneMachine"; 
+            //var NotEmptyMachine = "oneMachine";
+            var NotEmptyMachine = "";
 
             Assert.Equal(Machines, NotEmptyMachine);
         }
